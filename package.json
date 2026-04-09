@@ -1,0 +1,30 @@
+{
+  "name": "brew-cli",
+  "version": "1.0.0",
+  "main": "index.js",
+  "bin": {
+    "create-brew-app": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc && node -e \"const fs = require('fs-extra'); fs.copySync('src/templates', 'dist/templates')\"",
+    "start": "ts-node src/index.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "type": "module",
+  "dependencies": {
+    "chalk": "^5.6.2",
+    "commander": "^14.0.3",
+    "fs-extra": "^11.3.4",
+    "inquirer": "^12.11.1"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^11.0.4",
+    "@types/inquirer": "^9.0.9",
+    "@types/node": "^25.5.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^6.0.2"
+  }
+}
