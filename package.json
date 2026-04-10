@@ -9,10 +9,10 @@
     "build": "tsc && node -e \"const fs = require('fs-extra'); fs.copySync('src/templates', 'dist/templates')\"",
     "start": "ts-node src/index.ts"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["Backend", "Project scaffolder"],
+  "author": "Harsh Mer",
   "license": "ISC",
-  "description": "",
+  "description": "This project is a Node.js backend project scaffolder",
   "type": "module",
   "dependencies": {
     "chalk": "^5.6.2",

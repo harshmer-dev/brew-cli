@@ -7,7 +7,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { execSync } from 'child_process';
 
-// --- ESM __dirname Fix (Required because of "type": "module") ---
+// --- ESM __dirname Fix ---
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -20,7 +20,7 @@ program
   .argument('[project-name]', 'Name of the project')
   .action(async (projectName) => {
     
-    // 1. Ask for project name if not provided in command line
+    // 1. Prompt for name if not provided
     if (!projectName) {
       const answers = await inquirer.prompt([
         {
@@ -34,35 +34,69 @@ program
     }
 
     const targetPath = path.join(process.cwd(), projectName);
-    // This points to dist/templates after you run 'npm run build'
     const templatePath = path.join(__dirname, 'templates'); 
 
     console.log(chalk.blue(`\n☕ Brewing your project in: ${chalk.bold(targetPath)}...`));
 
     try {
-      // 2. Check if the folder already exists to prevent overwriting
+      // 2. Conflict Check
       if (fs.existsSync(targetPath)) {
         console.log(chalk.red(`\n❌ Error: Folder "${projectName}" already exists!`));
         process.exit(1);
       }
 
-      // 3. Ensure the templates folder actually exists in dist
-      if (!fs.existsSync(templatePath)) {
-        console.log(chalk.red(`\n❌ Error: Template files not found in ${templatePath}`));
-        console.log(chalk.yellow('Tip: Make sure you ran "npm run build" first!'));
-        process.exit(1);
+      // 3. Copy Template Files
+      await fs.ensureDir(targetPath);
+      if (fs.existsSync(templatePath)) {
+        await fs.copy(templatePath, targetPath);
+      } else {
+        // Fallback: Create src folder if template is missing
+        await fs.ensureDir(path.join(targetPath, 'src'));
       }
 
-      // 4. Create target directory and copy CONTENTS of templatePath
-      await fs.ensureDir(targetPath);
-      await fs.copy(templatePath, targetPath);
-
-      // 5. Update the package.json name inside the new project
+      // 4. Advanced package.json Configuration
       const pkgPath = path.join(targetPath, 'package.json');
+      let pkg: any = {};
+
       if (fs.existsSync(pkgPath)) {
-        const pkg = await fs.readJson(pkgPath);
-        pkg.name = projectName;
-        await fs.writeJson(pkgPath, pkg, { spaces: 2 });
+        pkg = await fs.readJson(pkgPath);
+      }
+
+      // Injecting necessary fields
+      pkg.name = projectName;
+      pkg.version = pkg.version || "1.0.0";
+      pkg.type = "module"; // Essential for ESM
+      pkg.main = "src/index.js";
+      
+      // Setup Scripts
+      pkg.scripts = {
+        start: "node src/index.js",
+        dev: "nodemon src/index.js",
+        ...pkg.scripts
+      };
+
+      // Ensure Nodemon is in devDependencies
+      pkg.devDependencies = {
+        "nodemon": "^3.1.0",
+        ...pkg.devDependencies
+      };
+
+      // Ensure Base Dependencies exist
+      pkg.dependencies = {
+        "express": "^4.19.0",
+        "mongoose": "^8.0.0",
+        "dotenv": "^16.4.0",
+        ...pkg.dependencies
+      };
+
+      await fs.writeJson(pkgPath, pkg, { spaces: 2 });
+      console.log(chalk.gray('  - Generated package.json with Nodemon & ESM support'));
+
+      // 5. Setup .env from .env.example if it exists
+      const exampleEnv = path.join(targetPath, '.env.example');
+      if (fs.existsSync(exampleEnv)) {
+        await fs.copy(exampleEnv, path.join(targetPath, '.env'));
+        console.log(chalk.gray('  - Created .env from template'));
       }
 
       // 6. Initialize Git
@@ -70,21 +104,21 @@ program
       try {
         execSync('git init', { cwd: targetPath, stdio: 'ignore' });
       } catch (e) {
-        console.log(chalk.gray('⚠️  Git not found, skipping git init.'));
+        console.log(chalk.gray('⚠️  Git init skipped (check if git is installed)'));
       }
 
-      // 7. Success Message
+      // 7. Success Final Message
       console.log(chalk.bold.green('\n✨ Project Brewed Successfully!'));
       console.log(chalk.gray('----------------------------------'));
       console.log(`${chalk.cyan('📂 Location:')} ${targetPath}`);
       console.log(`${chalk.cyan('🚀 Next Steps:')}`);
       console.log(chalk.white(`   1. cd ${projectName}`));
       console.log(chalk.white(`   2. npm install`));
-      console.log(chalk.white(`   3. npm start`));
+      console.log(chalk.white(`   3. npm run dev`));
       console.log(chalk.gray('----------------------------------\n'));
 
     } catch (error) {
-      console.error(chalk.red('\n❌ Something went wrong while brewing:'), error);
+      console.error(chalk.red('\n❌ Error during brewing:'), error);
       process.exit(1);
     }
   });
