@@ -19,16 +19,37 @@ const NamePrompt: React.FC<NamePromptProps> = ({ onSubmit }) => {
     };
 
     return (
-        <Box flexDirection="column">
-            <Box>
-                <Text>What is your project name? </Text>
-                <TextInput value={name} onChange={setName} onSubmit={handleSubmit} placeholder="my-brew-app" />
+        <Box flexDirection="column" marginTop={1} marginLeft={2}>
+            <Box marginBottom={1}>
+                <Text bold color="yellow">➜ </Text>
+                <Text bold color="white">What is your project name?</Text>
             </Box>
+            
+            <Box 
+                borderStyle="round" 
+                borderColor="cyan" 
+                paddingLeft={1} 
+                paddingRight={2}
+                width={40}
+            >
+                <Text color="yellow" bold>» </Text>
+                <TextInput 
+                    value={name} 
+                    onChange={setName} 
+                    onSubmit={handleSubmit} 
+                    placeholder="my-cool-project" 
+                />
+            </Box>
+            
             {error && (
                 <Box marginTop={1}>
-                    <Text color="red">{error}</Text>
+                    <Text color="red" bold>✖ {error}</Text>
                 </Box>
             )}
+            
+            <Box marginTop={1}>
+                <Text dimColor italic>Enter your project identifier and press Enter</Text>
+            </Box>
         </Box>
     );
 };

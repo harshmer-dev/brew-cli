@@ -8,11 +8,13 @@ interface SpinnerProps {
 
 const Spinner: React.FC<SpinnerProps> = ({ label }) => {
     return (
-        <Box>
-            <Text color="cyan">
-                <SpinnerLib type="dots" />
-            </Text>
-            <Text> {label}</Text>
+        <Box marginTop={1} marginLeft={2}>
+            <Box marginRight={1}>
+                <Text color="yellow">
+                    <SpinnerLib type="dots" />
+                </Text>
+            </Box>
+            <Text bold color="white">{label}</Text>
         </Box>
     );
 };

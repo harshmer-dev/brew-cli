@@ -15,10 +15,39 @@ interface SelectionListProps {
 
 const SelectionList: React.FC<SelectionListProps> = ({ title, items, onSelect }) => {
     return (
-        <Box flexDirection="column" marginTop={1}>
-            <Text bold color="cyan">{title}</Text>
+        <Box flexDirection="column" marginTop={1} marginLeft={2}>
+            <Box marginBottom={1}>
+                <Text bold color="yellow">➜ </Text>
+                <Text bold color="white">{title}</Text>
+            </Box>
+            
+            <Box 
+                borderStyle="round" 
+                borderColor="cyan" 
+                paddingLeft={1} 
+                paddingRight={2}
+                flexDirection="column"
+            >
+                <SelectInput 
+                    items={items} 
+                    onSelect={onSelect}
+                    indicatorComponent={({ isSelected }) => (
+                        <Box marginRight={1}>
+                            <Text color={isSelected ? "yellow" : "gray"}>
+                                {isSelected ? '●' : '○'}
+                            </Text>
+                        </Box>
+                    )}
+                    itemComponent={({ isSelected, label }) => (
+                        <Text color={isSelected ? "yellow" : "white"} bold={!!isSelected}>
+                            {label}
+                        </Text>
+                    )}
+                />
+            </Box>
+            
             <Box marginTop={1}>
-                <SelectInput items={items} onSelect={onSelect} />
+                <Text dimColor italic>Use arrow keys to navigate · Enter to select</Text>
             </Box>
         </Box>
     );
