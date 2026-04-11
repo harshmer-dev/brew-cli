@@ -10,8 +10,8 @@ interface SuccessBoxProps {
 
 const SuccessBox: React.FC<SuccessBoxProps> = ({ projectName, targetPath }) => {
   return (
-    <Box flexDirection="column" marginTop={1} marginLeft={2}>
-      <Gradient name="summer">
+    <Box flexDirection="column" marginLeft={2}>
+      <Gradient colors={["#f7971e", "#ffd200", "#00c6ff", "#0072ff"]}>
         <BigText text="CHEERS" font="block" />
       </Gradient>
 
