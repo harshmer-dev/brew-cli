@@ -15,7 +15,7 @@
   ],
   "author": "Harsh Mer",
   "license": "ISC",
-  "description": "This project is a Node.js backend project scaffolder",
+  "description": "An extensible CLI scaffolder for rapidly creating full-stack applications across modern JavaScript frameworks",
   "type": "module",
   "dependencies": {
     "commander": "^14.0.3",

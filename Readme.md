@@ -23,7 +23,7 @@
 No global installation required. Use directly with **npx**:
 
 ```bash
-npx create-brew-app myApp
+npx create-brew-app
 ```
 
 ---
@@ -31,18 +31,7 @@ npx create-brew-app myApp
 ## 🚀 Usage
 
 ```bash
-npx create-brew-app <project-name>
-```
-
----
-
-## 📌 Example
-
-```bash
-npx create-brew-app myBackend
-cd myBackend
-npm install
-npm start
+npx create-brew-app
 ```
 
 ---
@@ -94,12 +83,6 @@ If you’d like to improve this project:
 2. Create a new branch
 3. Make your changes
 4. Submit a pull request
-
----
-
-## 📄 License
-
-MIT License
 
 ---
 
