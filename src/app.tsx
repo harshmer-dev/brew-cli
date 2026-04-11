@@ -39,19 +39,16 @@ const App: React.FC<AppProps> = ({ initialProjectName, templatePath }) => {
     const [errorMessage, setErrorMessage] = useState('');
     const [targetPath, setTargetPath] = useState('');
 
-    // Platforms
     const platformItems = [
         { label: 'Node.js', value: 'node' },
         { label: 'Other Framework', value: 'other' }
     ];
 
-    // Languages
     const languageItems = [
         { label: 'JavaScript', value: 'javascript' },
         { label: 'TypeScript', value: 'typescript' }
     ];
 
-    // Frameworks
     const frameworkItems = [
         { label: 'Express', value: 'express' },
         { label: 'Fastify', value: 'fastify' },
@@ -100,67 +97,89 @@ const App: React.FC<AppProps> = ({ initialProjectName, templatePath }) => {
         if (phase === 'COMING_SOON') {
             setTimeout(() => {
                 exit();
-            }, 3000); // Wait a bit so user can read the message
+            }, 3000);
         }
     }, [phase]);
 
     const brew = async () => {
-        // Fallback for types
         if (!projectName || !platform || !language || !framework) return;
 
         const target = path.join(process.cwd(), projectName);
         setTargetPath(target);
 
-        // Path to the specific template chosen
-        const finalTemplatePath = path.join(templatePath, platform, language, framework);
-
         try {
-            // 1. Conflict Check
             if (fs.existsSync(target)) {
                 throw new Error(`Folder "${projectName}" already exists!`);
             }
 
-            // 2. Copy Template Files
-            setStatusMessage(`Brewing ${framework} with ${language} in ${platform}...`);
-            await fs.ensureDir(target);
+            // --- Scaffolding Logic ---
+            const isTS = language === 'typescript';
             
-            if (fs.existsSync(finalTemplatePath)) {
-                await fs.copy(finalTemplatePath, target);
+            // Logic based on framework type
+            if (framework === 'express' || framework === 'fastify') {
+                // TEMPLATE-BASED SCAFFOLDING
+                setStatusMessage(`Brewing ${framework} app (${language})...`);
+                const finalTemplatePath = path.join(templatePath, platform, language, framework);
+                
+                await fs.ensureDir(target);
+                if (fs.existsSync(finalTemplatePath)) {
+                    await fs.copy(finalTemplatePath, target);
+                } else {
+                    // Minimal fallback
+                    await fs.ensureDir(path.join(target, 'src'));
+                    await fs.writeJson(path.join(target, 'package.json'), {
+                        name: projectName,
+                        version: '1.0.0',
+                        type: 'module'
+                    });
+                }
             } else {
-                // Fallback for stubs
-                await fs.ensureDir(path.join(target, 'src'));
+                // COMMAND-BASED SCAFFOLDING
+                setStatusMessage(`Invoking official ${framework} cli (might take a minute)...`);
+
+                let cmd = '';
+                switch (framework) {
+                    case 'nextjs':
+                        cmd = `npx create-next-app@latest ${projectName} --${language} --eslint --tailwind --app --src-dir --import-alias "@/*" --use-npm --skip-install --yes`;
+                        break;
+                    case 'reactjs':
+                        cmd = `npm create vite@latest ${projectName} -- --template react${isTS ? '-ts' : ''} --no-interactive`;
+                        break;
+                    case 'vuejs':
+                        cmd = `npm create vite@latest ${projectName} -- --template vue${isTS ? '-ts' : ''} --no-interactive`;
+                        break;
+                    case 'angular':
+                        cmd = `npx -y @angular/cli@latest new ${projectName} --defaults --skip-install --skip-git`;
+                        break;
+                    case 'nestjs':
+                        cmd = `npx -y @nestjs/cli@latest new ${projectName} --package-manager npm --language ${isTS ? 'TS' : 'JS'} --skip-install --skip-git`;
+                        break;
+                }
+
+                if (cmd) {
+                    execSync(cmd, { stdio: 'ignore' });
+                }
             }
 
-            // 3. Configure package.json
-            setStatusMessage('Configuring package.json...');
+            // --- Final Post-Scaffolding Customization ---
+            setStatusMessage('Finishing touches...');
+            
             const pkgPath = path.join(target, 'package.json');
-            let pkg: any = {};
             if (fs.existsSync(pkgPath)) {
-                pkg = await fs.readJson(pkgPath);
-            } else {
-                // Stub package.json if it doesn't exist
-                pkg = {
-                    name: projectName,
-                    version: '1.0.0',
-                    type: 'module',
-                    scripts: {
-                        start: language === 'typescript' ? 'tsx src/index.ts' : 'node src/index.js'
-                    }
-                };
+                const pkg = await fs.readJson(pkgPath);
+                pkg.name = projectName;
+                pkg.description = `Project scaffolded using brew-cli (${framework} / ${language})`;
+                await fs.writeJson(pkgPath, pkg, { spaces: 2 });
             }
 
-            pkg.name = projectName;
-            pkg.description = `Project scaffolded using brew-cli (${framework} / ${language})`;
-
-            await fs.writeJson(pkgPath, pkg, { spaces: 2 });
-
-            // 4. Initialize Git
-            setStatusMessage('Initializing Git repository...');
+            // Standardize Git
             try {
-                execSync('git init', { cwd: target, stdio: 'ignore' });
-            } catch (e) {
-                // Silently skip if git fails
-            }
+                // Sometimes tools create it even if we ask not to, or don't. 
+                // We ensure it's there and freshly initialized if it's missing.
+                if (!fs.existsSync(path.join(target, '.git'))) {
+                    execSync('git init', { cwd: target, stdio: 'ignore' });
+                }
+            } catch (e) {}
 
             setPhase('SUCCESS');
         } catch (error: any) {
@@ -172,52 +191,14 @@ const App: React.FC<AppProps> = ({ initialProjectName, templatePath }) => {
     return (
         <Box flexDirection="column" padding={1}>
             <Welcome />
-            
-            {phase === 'PLATFORM' && (
-                <SelectionList 
-                    title="Choose your platform:" 
-                    items={platformItems} 
-                    onSelect={handlePlatformSelect} 
-                />
-            )}
-
-            {phase === 'LANGUAGE' && (
-                <SelectionList 
-                    title={`Select language for ${platform}:`} 
-                    items={languageItems} 
-                    onSelect={handleLanguageSelect} 
-                />
-            )}
-
-            {phase === 'FRAMEWORK' && (
-                <SelectionList 
-                    title={`Which framework or library do you want to use?`} 
-                    items={frameworkItems} 
-                    onSelect={handleFrameworkSelect} 
-                />
-            )}
-            
-            {phase === 'NAME' && (
-                <NamePrompt onSubmit={startBrewing} />
-            )}
-
-            {phase === 'COMING_SOON' && (
-                <Box marginTop={1}>
-                    <Text color="yellow" bold>More technologies will be available in the near future!</Text>
-                </Box>
-            )}
-            
-            {phase === 'BREWING' && (
-                <Spinner label={statusMessage} />
-            )}
-            
-            {phase === 'SUCCESS' && projectName && (
-                <SuccessBox projectName={projectName} targetPath={targetPath} />
-            )}
-            
-            {phase === 'ERROR' && (
-                <ErrorDisplay message={errorMessage} />
-            )}
+            {phase === 'PLATFORM' && <SelectionList title="Choose your platform:" items={platformItems} onSelect={handlePlatformSelect} />}
+            {phase === 'LANGUAGE' && <SelectionList title={`Select language for ${platform}:`} items={languageItems} onSelect={handleLanguageSelect} />}
+            {phase === 'FRAMEWORK' && <SelectionList title={`Which framework or library do you want to use?`} items={frameworkItems} onSelect={handleFrameworkSelect} />}
+            {phase === 'NAME' && <NamePrompt onSubmit={startBrewing} />}
+            {phase === 'COMING_SOON' && <Box marginTop={1}><Text color="yellow" bold>More technologies will be available in the near future!</Text></Box>}
+            {phase === 'BREWING' && <Spinner label={statusMessage} />}
+            {phase === 'SUCCESS' && projectName && <SuccessBox projectName={projectName} targetPath={targetPath} />}
+            {phase === 'ERROR' && <ErrorDisplay message={errorMessage} />}
         </Box>
     );
 };
