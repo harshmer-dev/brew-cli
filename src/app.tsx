@@ -37,7 +37,7 @@ const App: React.FC<AppProps> = ({ initialProjectName, templatePath }) => {
   const [language, setLanguage] = useState<string>("");
   const [framework, setFramework] = useState<string>("");
 
-  const [statusMessage, setStatusMessage] = useState("Brewing your backend...");
+  const [statusMessage, setStatusMessage] = useState("Brewing your project...");
   const [errorMessage, setErrorMessage] = useState("");
   const [targetPath, setTargetPath] = useState("");
 
