@@ -99,6 +99,8 @@ const App: React.FC<AppProps> = ({ initialProjectName, templatePath }) => {
     ) {
       brew();
     }
+
+    if (phase === "SUCCESS") exit();
   }, [phase]);
 
   useEffect(() => {
