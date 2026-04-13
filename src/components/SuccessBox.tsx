@@ -29,7 +29,7 @@ const SuccessBox: React.FC<SuccessBoxProps> = ({ projectName, targetPath }) => {
       >
         <Box justifyContent="center" marginBottom={1}>
           <Text bold color="cyan">
-            ☕ create-brew-app 2026
+            🍺 create-brew-app
           </Text>
         </Box>
 
