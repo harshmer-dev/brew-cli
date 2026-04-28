@@ -41,7 +41,7 @@ const SelectionList: React.FC<SelectionListProps> = ({
           onSelect={onSelect}
           indicatorComponent={({ isSelected }) => (
             <Box marginRight={1}>
-              <Text color="blue">{isSelected ? ">" : " "}</Text>
+              <Text color="blue">{isSelected ? "❯" : " "}</Text>
             </Box>
           )}
           itemComponent={({ isSelected, label }) => (

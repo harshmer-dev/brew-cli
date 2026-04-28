@@ -56,6 +56,10 @@ const App: React.FC<AppProps> = ({ initialProjectName, templatePath }) => {
     { label: "Fastify", value: "fastify" },
     { label: "NestJS", value: "nestjs" },
     { label: "ReactJS", value: "reactjs" },
+    ...(language === "typescript"
+      ? [{ label: "React Native CLI", value: "reactNativeCli" }]
+      : []),
+    { label: "React Native Expo", value: "reactNativeExpo" },
     { label: "Angular", value: "angular" },
     { label: "Vuejs", value: "vuejs" },
     { label: "NextJS", value: "nextjs" },
@@ -162,6 +166,12 @@ const App: React.FC<AppProps> = ({ initialProjectName, templatePath }) => {
           case "reactjs":
             cmd = `npm create vite@latest ${projectName} -- --template react${isTS ? "-ts" : ""} --no-interactive`;
             break;
+          case "reactNativeCli":
+            cmd = `npx @react-native-community/cli@latest init ${projectName} --skip-install --install-pods false`;
+            break;
+          case "reactNativeExpo":
+            cmd = `npx create-expo-app@latest ${projectName} --template ${isTS ? "blank-typescript" : "blank"} --no-install`;
+            break;
           case "vuejs":
             cmd = `npm create vite@latest ${projectName} -- --template vue${isTS ? "-ts" : ""} --no-interactive`;
             break;
@@ -174,7 +184,22 @@ const App: React.FC<AppProps> = ({ initialProjectName, templatePath }) => {
         }
 
         if (cmd) {
-          execSync(cmd, { stdio: "ignore" });
+          try {
+            execSync(cmd, { stdio: ["ignore", "ignore", "pipe"] });
+          } catch (err: any) {
+            const stderr = err.stderr?.toString().trim();
+            throw new Error(
+              stderr
+                ? `${framework} scaffolder failed:\n${stderr}`
+                : `${framework} scaffolder failed (exit ${err.status ?? "?"})`,
+            );
+          }
+        }
+
+        if (!fs.existsSync(target)) {
+          throw new Error(
+            `${framework} scaffolder reported success but did not create "${projectName}".`,
+          );
         }
       }
 
