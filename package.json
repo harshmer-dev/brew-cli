@@ -1,5 +1,5 @@
 {
-  "name": "create-brew-app",
+  "name": "brew-cli",
   "version": "1.0.0",
   "main": "index.js",
   "bin": {
@@ -7,11 +7,29 @@
   },
   "scripts": {
     "build": "tsc && node -e \"import fs from 'fs-extra'; fs.copySync('src/templates', 'dist/templates')\"",
+    "postbuild": "chmod +x dist/cli.js",
     "start": "tsx src/cli.tsx"
   },
   "keywords": [
-    "Backend",
-    "Project scaffolder"
+    "cli",
+    "scaffolder",
+    "project-generator",
+    "boilerplate",
+    "starter",
+    "express",
+    "fastify",
+    "nestjs",
+    "react",
+    "nextjs",
+    "vuejs",
+    "angular",
+    "react-native",
+    "expo",
+    "typescript",
+    "javascript",
+    "nodejs",
+    "fullstack",
+    "create-app"
   ],
   "author": "Harsh Mer",
   "contributors": [
@@ -22,6 +40,9 @@
   ],
   "license": "ISC",
   "description": "An extensible CLI scaffolder for rapidly creating full-stack applications across modern JavaScript frameworks",
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "type": "module",
   "dependencies": {
     "commander": "^14.0.3",
