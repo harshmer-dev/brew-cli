@@ -83,14 +83,14 @@ For everything else (**Next.js, React, Vue, Angular, NestJS, Expo, React Native 
 ## Example
 
 ```bash
-$ create-brew-app my-api
+$ create-brew-app my-app
 
   ██████╗ ██████╗ ███████╗██╗    ██╗   ██████╗ ██╗     ██╗
-  ██╔══██╗██╔══██╗██╔════╝██║    ██║   ██╔════╝██║     ██║
+  ██╔══██╗██╔══██╗██╔════╝██║    ██║   ██╔═══╝ ██║     ██║
   ██████╔╝██████╔╝█████╗  ██║ █╗ ██║   ██║     ██║     ██║
   ██╔══██╗██╔══██╗██╔══╝  ██║███╗██║   ██║     ██║     ██║
   ██████╔╝██║  ██║███████╗╚███╔███╔╝   ╚██████╗███████╗██║
-  ╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚══╝╚══╝    ╚═════╝╚══════╝ ╚═╝
+  ╚═════╝ ╚═╝  ╚═╝╚══════╝ ╚══╝╚══╝     ╚═════╝╚══════╝╚═╝
 
   ⚡ The Ultimate Project Scaffolder for 2026
 
@@ -154,7 +154,7 @@ Contributions are welcome! If you'd like to add a framework, fix a bug, or impro
 
 ## License
 
-ISC © [Harsh Mer](https://github.com/aspect-developer) · [Keval Tank](https://github.com/Keval-Tank)
+MIT © [Harsh Mer](https://github.com/aspect-developer) · [Keval Tank](https://github.com/Keval-Tank)
 
 ---
 

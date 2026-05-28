@@ -38,7 +38,7 @@
       "url": "https://github.com/Keval-Tank"
     }
   ],
-  "license": "ISC",
+  "license": "MIT",
   "description": "An extensible CLI scaffolder for rapidly creating full-stack applications across modern JavaScript frameworks",
   "engines": {
     "node": ">=18.0.0"
