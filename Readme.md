@@ -111,7 +111,7 @@ $ create-brew-app my-app
   ✨ Brewing complete! Your project is served hot.
 
   🚀 NEXT STEPS:
-     1. cd my-api
+     1. cd my-app
      2. npm install
      3. npm run dev
 
@@ -155,9 +155,3 @@ Contributions are welcome! If you'd like to add a framework, fix a bug, or impro
 ## License
 
 MIT © [Harsh Mer](https://github.com/aspect-developer) · [Keval Tank](https://github.com/Keval-Tank)
-
----
-
-<p align="center">
-  Built with <a href="https://github.com/vadimdemedes/ink">Ink</a> · Powered by caffeine and good vibes ☕
-</p>
