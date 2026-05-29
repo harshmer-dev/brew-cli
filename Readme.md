@@ -1,16 +1,16 @@
-# 🍺 brew-cli
+# 🍺 brewcli
 
 **The Ultimate Project Scaffolder — Brew a fresh project in seconds.**
 
-`brew-cli` is a beautiful, interactive CLI tool that scaffolds production-ready projects across the Node.js ecosystem. Pick your platform, language, and framework — and let brew handle the rest.
+`brewcli` is a beautiful, interactive CLI tool that scaffolds production-ready projects across the Node.js ecosystem. Pick your platform, language, and framework — and let brew handle the rest.
 
 > No more copying boilerplate. No more wiring configs by hand. Just brew it.
 
 ---
 
-## Why brew-cli?
+## Why brewcli?
 
-Setting up a new project should take seconds, not hours. `brew-cli` gives you a single command to scaffold fully configured projects across **10+ frameworks**, with support for both JavaScript and TypeScript out of the box. It wraps official CLIs (Next.js, Angular, NestJS, Expo, etc.) and ships battle-tested templates for Express and Fastify — so you always get the canonical project structure, not a random skeleton.
+Setting up a new project should take seconds, not hours. `brewcli` gives you a single command to scaffold fully configured projects across **10+ frameworks**, with support for both JavaScript and TypeScript out of the box. It wraps official CLIs (Next.js, Angular, NestJS, Expo, etc.) and ships battle-tested templates for Express and Fastify — so you always get the canonical project structure, not a random skeleton.
 
 ---
 
@@ -35,7 +35,7 @@ Setting up a new project should take seconds, not hours. `brew-cli` gives you a 
 ### Install globally
 
 ```bash
-npm install -g brew-cli
+npm install -g brewcli
 ```
 
 ### Scaffold a project
@@ -47,7 +47,7 @@ create-brew-app my-app
 Or just run it directly without installing:
 
 ```bash
-npx brew-cli my-app
+npx brewcli my-app
 ```
 
 You can also run it without a project name — brew will prompt you for one:
@@ -60,7 +60,7 @@ create-brew-app
 
 ## How It Works
 
-`brew-cli` walks you through an interactive flow right in your terminal:
+`brewcli` walks you through an interactive flow right in your terminal:
 
 ```
 1.  Choose your platform     →  Node.js (more coming soon)
